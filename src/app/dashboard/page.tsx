@@ -117,7 +117,7 @@ export default function DashboardHome() {
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm md:text-base text-gray-600 mt-2">Welcome to the iSafe Admin Panel</p>
+        <p className="text-sm md:text-base text-gray-700 mt-2">Welcome to the iSafe Admin Panel</p>
       </div>
 
       {/* Stats Cards */}
@@ -128,9 +128,9 @@ export default function DashboardHome() {
             <div key={index} className="bg-white rounded-lg shadow-md p-4 md:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs md:text-sm text-gray-600 truncate">{stat.title}</p>
+                  <p className="text-xs md:text-sm text-gray-700 truncate">{stat.title}</p>
                   <p className="text-xl md:text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                  <p className="text-xs md:text-sm text-gray-500 mt-1 truncate">{stat.change}</p>
+                  <p className="text-xs md:text-sm text-gray-700 mt-1 truncate">{stat.change}</p>
                 </div>
                 <div className={`${stat.color} p-2 md:p-3 rounded-lg flex-shrink-0`}>
                   <Icon className="h-5 w-5 md:h-6 md:w-6 text-white" />
@@ -159,7 +159,7 @@ export default function DashboardHome() {
                   }`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs md:text-sm text-gray-900 leading-relaxed">{activity.message}</p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                    <p className="text-xs text-gray-700 mt-1">{activity.time}</p>
                   </div>
                 </div>
               ))}
@@ -183,7 +183,7 @@ export default function DashboardHome() {
                     </span>
                   </div>
                   {device.data && (
-                    <div className="grid grid-cols-2 gap-2 text-xs md:text-sm">
+                    <div className="grid grid-cols-2 gap-2 text-xs md:text-sm text-gray-800">
                       <div className="flex items-center min-w-0">
                         <Thermometer className="h-3 w-3 md:h-4 md:w-4 text-red-500 mr-1 flex-shrink-0" />
                         <span className="truncate">{device.data.sensors.bme680.temperature_c.toFixed(1)}°C</span>
@@ -192,7 +192,7 @@ export default function DashboardHome() {
                         <Droplets className="h-3 w-3 md:h-4 md:w-4 text-blue-500 mr-1 flex-shrink-0" />
                         <span className="truncate">{device.data.sensors.bme680.humidity_pct.toFixed(1)}%</span>
                       </div>
-                      <div className="col-span-2 flex items-center justify-between text-xs text-gray-500 mt-1">
+                      <div className="col-span-2 flex items-center justify-between text-xs text-gray-700 mt-1">
                         <span className="truncate">Posture: {device.data.sensors.imu.angle_over_limit ? 'Poor' : 'Good'}</span>
                         <span className="truncate">Weight: {device.data.sensors.loadcell.overweight ? 'Over' : 'Normal'}</span>
                       </div>
@@ -201,7 +201,7 @@ export default function DashboardHome() {
                 </div>
               ))}
               {onlineDevices.length === 0 && (
-                <div className="text-center text-gray-500 py-4 text-sm">
+                <div className="text-center text-gray-700 py-4 text-sm">
                   No devices online
                 </div>
               )}

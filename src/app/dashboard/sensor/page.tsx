@@ -1,36 +1,24 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wifi, WifiOff, Settings, MapPin, Battery, Signal, Thermometer, Droplets, Activity, Zap } from 'lucide-react';
+import { Wifi, WifiOff, Settings, MapPin, Thermometer, Droplets, Activity, Zap, Weight, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useESP32Data } from '@/hooks/useESP32';
+import Link from 'next/link';
 
 export default function SensorPage() {
   const [filter, setFilter] = useState('all');
-  const { devices, loading, controlActuator } = useESP32Data();
+  const { devices, loading } = useESP32Data();
 
   // Transform ESP32 data to sensor data
   const sensorData = React.useMemo(() => {
     return devices.map(device => {
-      const timeSinceLastSeen = Date.now() - (device.lastSeen * 1000);
-      const isStale = timeSinceLastSeen > 60000; // More than 1 minute is stale
-      
-      let status = device.isOnline ? 'online' : 'offline';
-      if (device.isOnline && isStale) {
-        status = 'warning';
-      }
-
-      // Simulate battery and signal strength based on sensor data
-      // In real implementation, these would come from the ESP32
-      const battery = device.data ? Math.max(20, 100 - Math.floor(timeSinceLastSeen / 60000)) : 0;
-      const signalStrength = device.isOnline ? Math.max(30, 95 - Math.floor(timeSinceLastSeen / 30000)) : 0;
+      const status = device.isOnline ? 'online' : 'offline';
 
       return {
         id: device.deviceId,
         name: `ESP32 ${device.deviceId}`,
         location: `Zone ${device.deviceId} - Manufacturing`,
         status,
-        battery: Math.min(100, battery),
-        signalStrength: Math.min(100, signalStrength),
         lastSeen: getTimeAgo(new Date(device.lastSeen * 1000)),
         connectedWorkers: device.isOnline ? 1 : 0,
         data: device.data,
@@ -53,7 +41,6 @@ export default function SensorPage() {
     switch (status) {
       case 'online': return 'text-green-600 bg-green-100';
       case 'offline': return 'text-red-600 bg-red-100';
-      case 'warning': return 'text-yellow-600 bg-yellow-100';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
@@ -62,21 +49,8 @@ export default function SensorPage() {
     switch (status) {
       case 'online': return Wifi;
       case 'offline': return WifiOff;
-      case 'warning': return Wifi;
       default: return Wifi;
     }
-  };
-
-  const getBatteryColor = (battery: number) => {
-    if (battery > 50) return 'text-green-600';
-    if (battery > 20) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getSignalColor = (signal: number) => {
-    if (signal > 70) return 'text-green-600';
-    if (signal > 40) return 'text-yellow-600';
-    return 'text-red-600';
   };
 
   const filteredData = filter === 'all' 
@@ -87,16 +61,9 @@ export default function SensorPage() {
     total: sensorData.length,
     online: sensorData.filter(s => s.status === 'online').length,
     offline: sensorData.filter(s => s.status === 'offline').length,
-    warning: sensorData.filter(s => s.status === 'warning').length,
   };
 
-  const handleActuatorControl = async (deviceId: string, actuator: string, currentValue: boolean) => {
-    try {
-      await controlActuator(deviceId, actuator, !currentValue);
-    } catch (error) {
-      console.error('Failed to control actuator:', error);
-    }
-  };
+  
 
   if (loading) {
     return (
@@ -115,7 +82,7 @@ export default function SensorPage() {
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -139,16 +106,6 @@ export default function SensorPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Warning</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-1">{stats.warning}</p>
-            </div>
-            <Wifi className="h-8 w-8 text-yellow-600" />
-          </div>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between">
-            <div>
               <p className="text-sm text-gray-600">Offline</p>
               <p className="text-3xl font-bold text-red-600 mt-1">{stats.offline}</p>
             </div>
@@ -165,16 +122,12 @@ export default function SensorPage() {
             <select 
               value={filter} 
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             >
               <option value="all">All Sensors</option>
               <option value="online">Online</option>
-              <option value="warning">Warning</option>
               <option value="offline">Offline</option>
             </select>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-              Add Sensor
-            </button>
           </div>
         </div>
       </div>
@@ -188,11 +141,11 @@ export default function SensorPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <StatusIcon className={`h-5 w-5 ${sensor.status === 'online' ? 'text-green-600' : sensor.status === 'offline' ? 'text-red-600' : 'text-yellow-600'}`} />
+                    <StatusIcon className={`h-5 w-5 ${sensor.status === 'online' ? 'text-green-600' : 'text-red-600'}`} />
                     <h4 className="font-semibold text-gray-900">{sensor.name}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 mb-1">ID: {sensor.id}</p>
-                  <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-700 mb-1">ID: {sensor.id}</p>
+                  <div className="flex items-center text-sm text-gray-700 mb-3">
                     <MapPin className="h-4 w-4 mr-1" />
                     {sensor.location}
                   </div>
@@ -202,21 +155,6 @@ export default function SensorPage() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="flex items-center space-x-2">
-                  <Battery className={`h-4 w-4 ${getBatteryColor(sensor.battery)}`} />
-                  <span className="text-sm text-gray-600">
-                    Battery: <span className={`font-medium ${getBatteryColor(sensor.battery)}`}>{sensor.battery}%</span>
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Signal className={`h-4 w-4 ${getSignalColor(sensor.signalStrength)}`} />
-                  <span className="text-sm text-gray-600">
-                    Signal: <span className={`font-medium ${getSignalColor(sensor.signalStrength)}`}>{sensor.signalStrength}%</span>
-                  </span>
-                </div>
-              </div>
-
               {/* Environmental Data */}
               {sensor.data && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
@@ -224,60 +162,120 @@ export default function SensorPage() {
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center">
                       <Thermometer className="h-3 w-3 text-red-500 mr-1" />
-                      <span>{sensor.data.sensors.bme680.temperature_c.toFixed(1)}°C</span>
+                      <span className="text-gray-800">{sensor.data.sensors.bme680.temperature_c.toFixed(1)}°C</span>
                     </div>
                     <div className="flex items-center">
                       <Droplets className="h-3 w-3 text-blue-500 mr-1" />
-                      <span>{sensor.data.sensors.bme680.humidity_pct.toFixed(1)}%</span>
+                      <span className="text-gray-800">{sensor.data.sensors.bme680.humidity_pct.toFixed(1)}%</span>
                     </div>
                     <div className="flex items-center">
                       <Activity className="h-3 w-3 text-purple-500 mr-1" />
-                      <span>Gas: {sensor.data.sensors.bme680.gas_kohm.toFixed(1)}kΩ</span>
+                      <span className="text-gray-800">Gas: {sensor.data.sensors.bme680.gas_kohm.toFixed(1)}kΩ</span>
                     </div>
                     <div className="flex items-center">
                       <Zap className="h-3 w-3 text-green-500 mr-1" />
-                      <span>EMG: {sensor.data.sensors.emg.raw}</span>
+                      <span className="text-gray-800">EMG: {sensor.data.sensors.emg.raw}</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Actuator Controls */}
+              {/* Loadcell Weight Monitoring */}
               {sensor.data && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <h5 className="text-sm font-medium text-gray-900 mb-2">Actuator Controls</h5>
-                  <div className="flex flex-wrap gap-1">
-                    {Object.entries(sensor.data.actuators).map(([actuator, value]) => (
-                      <button
-                        key={actuator}
-                        onClick={() => handleActuatorControl(sensor.id, actuator, value)}
-                        className={`px-2 py-1 text-xs rounded transition-colors ${
-                          value
-                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  <div className="flex items-center justify-between mb-3">
+                    <h5 className="text-sm font-medium text-gray-900 flex items-center">
+                      <Weight className="h-4 w-4 mr-1.5 text-indigo-600" />
+                      Load Sensor
+                    </h5>
+                    {sensor.data.sensors.loadcell.overweight ? (
+                      <span className="flex items-center text-xs font-semibold text-red-600 bg-red-50 px-2 py-1 rounded-full">
+                        <AlertTriangle className="h-3 w-3 mr-1" />
+                        Overweight
+                      </span>
+                    ) : (
+                      <span className="flex items-center text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Normal
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Weight Display */}
+                  <div className="mb-3">
+                    <div className="flex items-end justify-between mb-1">
+                      <span className="text-2xl font-bold text-gray-900">
+                        {(sensor.data.sensors.loadcell.weight_g / 1000).toFixed(2)}
+                        <span className="text-sm font-normal text-gray-500 ml-1">kg</span>
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {sensor.data.sensors.loadcell.weight_g.toFixed(0)}g
+                      </span>
+                    </div>
+                    
+                    {/* Weight Progress Bar */}
+                    <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
+                          sensor.data.sensors.loadcell.overweight 
+                            ? 'bg-gradient-to-r from-red-500 to-red-600 animate-pulse' 
+                            : 'bg-gradient-to-r from-indigo-500 to-indigo-600'
                         }`}
+                        style={{ 
+                          width: `${Math.min(100, (sensor.data.sensors.loadcell.weight_g / 25000) * 100)}%` 
+                        }}
                       >
-                        {actuator}: {value ? 'ON' : 'OFF'}
-                      </button>
-                    ))}
+                        <div className="absolute inset-0 bg-white opacity-20 animate-pulse"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Weight Range Indicator */}
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>0 kg</span>
+                      <span className="font-medium">Max: 25 kg</span>
+                    </div>
+                  </div>
+                  
+                  {/* Load Status Info */}
+                  <div className={`rounded-lg p-2.5 text-xs ${
+                    sensor.data.sensors.loadcell.overweight 
+                      ? 'bg-red-50 border border-red-200' 
+                      : 'bg-indigo-50 border border-indigo-200'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <span className={`font-medium ${
+                        sensor.data.sensors.loadcell.overweight ? 'text-red-700' : 'text-indigo-700'
+                      }`}>
+                        Load Status:
+                      </span>
+                      <span className={`font-semibold ${
+                        sensor.data.sensors.loadcell.overweight ? 'text-red-800' : 'text-indigo-800'
+                      }`}>
+                        {((sensor.data.sensors.loadcell.weight_g / 25000) * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    {sensor.data.sensors.loadcell.overweight && (
+                      <p className="text-red-600 mt-1 text-xs">
+                        ⚠ Warning: Weight exceeds safe limit!
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
+
+              
 
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Connected Workers: <span className="font-medium text-gray-900">{sensor.connectedWorkers}</span></span>
-                  <span className="text-gray-500">{sensor.lastSeen}</span>
+                  <span className="text-gray-600">{sensor.lastSeen}</span>
                 </div>
               </div>
 
               <div className="mt-4 flex space-x-2">
-                <button className="flex-1 bg-blue-50 text-blue-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
-                  Configure
-                </button>
-                <button className="flex-1 bg-gray-50 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                <Link href={`/dashboard/sensor/${encodeURIComponent(sensor.id)}`} className="flex-1 bg-gray-50 text-gray-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors text-center">
                   Details
-                </button>
+                </Link>
               </div>
             </div>
           );

@@ -343,24 +343,7 @@ export default function WorkerDashboard() {
         </div>
       )}
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-            <Activity className="h-6 w-6 text-blue-600" />
-            <span className="text-blue-900 font-medium">Start Work Session</span>
-          </button>
-          <button className="flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-            <Clock className="h-6 w-6 text-green-600" />
-            <span className="text-green-900 font-medium">Take Break</span>
-          </button>
-          <button className="flex items-center space-x-3 p-4 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
-            <AlertTriangle className="h-6 w-6 text-red-600" />
-            <span className="text-red-900 font-medium">Report Issue</span>
-          </button>
-        </div>
-      </div>
+      
     </div>
   );
 }

@@ -3,21 +3,30 @@
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, Clock, X, Eye, Thermometer, Activity } from 'lucide-react';
 import { useESP32Alerts } from '@/hooks/useESP32';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function AlertPage() {
   const [filter, setFilter] = useState('all');
   const [severityFilter, setSeverityFilter] = useState('all');
   const { alerts } = useESP32Alerts();
+  const { user } = useAuth();
 
   // Add status and additional metadata to alerts from hook
   const alertData = React.useMemo(() => {
-    return alerts.map((alert, index) => ({
+    const allAlerts = alerts.map((alert, index) => ({
       ...alert,
       status: alert.resolved ? 'resolved' : (index % 3 === 0 ? 'acknowledged' : 'active'),
       workerName: alert.workerId ? `Worker ${alert.workerId}` : null,
       sensorId: alert.deviceId
     }));
-  }, [alerts]);
+    
+    // Filter alerts for workers to show only their own alerts
+    if (user?.role === 'worker') {
+      return allAlerts.filter(alert => alert.workerId === user.uid);
+    }
+    
+    return allAlerts;
+  }, [alerts, user]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -84,7 +93,11 @@ export default function AlertPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Alert Management</h1>
-        <p className="text-sm md:text-base text-gray-600 mt-2">Monitor and manage safety alerts in real-time</p>
+        <p className="text-sm md:text-base text-gray-700 mt-2">
+          {user?.role === 'worker' 
+            ? 'View your safety alerts in real-time' 
+            : 'Monitor and manage safety alerts in real-time'}
+        </p>
       </div>
 
       {/* Statistics */}
@@ -92,7 +105,7 @@ export default function AlertPage() {
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm text-gray-600 truncate">Total Alerts</p>
+              <p className="text-xs md:text-sm text-gray-700 truncate">Total Alerts</p>
               <p className="text-xl md:text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
             </div>
             <AlertTriangle className="h-6 w-6 md:h-8 md:w-8 text-blue-600 flex-shrink-0" />
@@ -102,7 +115,7 @@ export default function AlertPage() {
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm text-gray-600 truncate">Active</p>
+              <p className="text-xs md:text-sm text-gray-700 truncate">Active</p>
               <p className="text-xl md:text-3xl font-bold text-red-600 mt-1">{stats.active}</p>
             </div>
             <AlertTriangle className="h-6 w-6 md:h-8 md:w-8 text-red-600 flex-shrink-0" />
@@ -112,7 +125,7 @@ export default function AlertPage() {
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm text-gray-600 truncate">Acknowledged</p>
+              <p className="text-xs md:text-sm text-gray-700 truncate">Acknowledged</p>
               <p className="text-xl md:text-3xl font-bold text-yellow-600 mt-1">{stats.acknowledged}</p>
             </div>
             <Clock className="h-6 w-6 md:h-8 md:w-8 text-yellow-600 flex-shrink-0" />
@@ -122,7 +135,7 @@ export default function AlertPage() {
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm text-gray-600 truncate">Resolved</p>
+              <p className="text-xs md:text-sm text-gray-700 truncate">Resolved</p>
               <p className="text-xl md:text-3xl font-bold text-green-600 mt-1">{stats.resolved}</p>
             </div>
             <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-green-600 flex-shrink-0" />
@@ -138,7 +151,7 @@ export default function AlertPage() {
             <select 
               value={filter} 
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-gray-800"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -148,7 +161,7 @@ export default function AlertPage() {
             <select 
               value={severityFilter} 
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-gray-800"
             >
               <option value="all">All Severity</option>
               <option value="critical">Critical</option>
@@ -160,6 +173,21 @@ export default function AlertPage() {
           </div>
         </div>
       </div>
+
+      {/* Worker Info Box */}
+      {user?.role === 'worker' && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start">
+            <AlertTriangle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="ml-3">
+              <p className="text-sm text-blue-800 font-medium">Worker View</p>
+              <p className="text-sm text-blue-700 mt-1">
+                You are viewing only alerts related to your assigned sensor and activities.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Alerts List */}
       <div className="space-y-3 md:space-y-4">
@@ -179,8 +207,8 @@ export default function AlertPage() {
                         {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
                       </span>
                     </div>
-                    <p className="text-sm md:text-base text-gray-600 mb-2 leading-relaxed">{alert.description}</p>
-                    <div className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4 text-xs md:text-sm text-gray-500">
+                    <p className="text-sm md:text-base text-gray-800 mb-2 leading-relaxed">{alert.description}</p>
+                    <div className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4 text-xs md:text-sm text-gray-700">
                       {alert.workerName && (
                         <span className="truncate">Worker: <span className="font-medium text-gray-700">{alert.workerName}</span></span>
                       )}
@@ -189,7 +217,7 @@ export default function AlertPage() {
                       <span className="truncate">({getTimeAgo(alert.timestamp)})</span>
                     </div>
                     {alert.sensorData && (
-                      <div className="mt-2 text-xs text-gray-600 bg-gray-50 rounded p-2">
+                      <div className="mt-2 text-xs text-gray-800 bg-gray-50 rounded p-2">
                         <strong>Sensor Data:</strong>{' '}
                         {alert.type === 'posture' && alert.sensorData.imu && (
                           <span>Pitch: {alert.sensorData.imu.pitch_deg.toFixed(1)}°, Roll: {alert.sensorData.imu.roll_deg.toFixed(1)}°</span>

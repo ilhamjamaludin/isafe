@@ -24,8 +24,8 @@ const navigation = [
   { name: 'Dashboard', href: '/worker', icon: Home },
   { name: 'Live Monitoring', href: '/worker/monitoring', icon: Activity },
   { name: 'My Alerts', href: '/worker/alerts', icon: AlertTriangle },
-  { name: 'Work History', href: '/worker/history', icon: Clock },
-  { name: 'Health Report', href: '/worker/report', icon: BarChart3 },
+  // Removed Work History per request
+  // Removed non-existing menus from Profile area
   { name: 'Profile', href: '/worker/profile', icon: User },
 ];
 

@@ -297,49 +297,7 @@ export default function WorkerProfilePage() {
         </div>
       )}
 
-      {/* Notification Preferences */}
-      <div className="bg-white rounded-lg shadow-md">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-            <Bell className="h-5 w-5 mr-2" />
-            Notification Preferences
-          </h3>
-        </div>
-        <div className="p-6">
-          <div className="space-y-4">
-            {Object.entries(notifications).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-900">
-                    {key === 'safetyAlerts' && 'Safety Alerts'}
-                    {key === 'breakReminders' && 'Break Reminders'}
-                    {key === 'shiftUpdates' && 'Shift Updates'}
-                    {key === 'weeklyReports' && 'Weekly Reports'}
-                  </h4>
-                  <p className="text-xs text-gray-600">
-                    {key === 'safetyAlerts' && 'Receive notifications for safety violations'}
-                    {key === 'breakReminders' && 'Get reminded to take regular breaks'}
-                    {key === 'shiftUpdates' && 'Notifications about shift changes'}
-                    {key === 'weeklyReports' && 'Weekly performance and safety summaries'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setNotifications(prev => ({ ...prev, [key]: !value }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    value ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      value ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      
 
       {/* Security Section */}
       <div className="bg-white rounded-lg shadow-md">
@@ -351,16 +309,6 @@ export default function WorkerProfilePage() {
         </div>
         <div className="p-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-medium text-gray-900">Data Privacy</h4>
-                <p className="text-xs text-gray-600">Your safety data is encrypted and secured</p>
-              </div>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Protected
-              </span>
-            </div>
-            
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-medium text-gray-900">Account Status</h4>

@@ -187,7 +187,7 @@ export default function UsersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-2">Manage user accounts and permissions</p>
+          <p className="text-gray-700 mt-2">Manage user accounts and permissions</p>
         </div>
         <button
           onClick={() => handleOpenModal()}
@@ -210,7 +210,7 @@ export default function UsersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Users</p>
+              <p className="text-sm text-gray-700">Total Users</p>
               <p className="text-3xl font-bold text-gray-900 mt-1">{stats.totalUsers}</p>
             </div>
             <Users className="h-8 w-8 text-blue-600" />
@@ -220,7 +220,7 @@ export default function UsersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Admins</p>
+              <p className="text-sm text-gray-700">Admins</p>
               <p className="text-3xl font-bold text-purple-600 mt-1">{stats.adminCount}</p>
             </div>
             <Crown className="h-8 w-8 text-purple-600" />
@@ -230,7 +230,7 @@ export default function UsersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Workers</p>
+              <p className="text-sm text-gray-700">Workers</p>
               <p className="text-3xl font-bold text-blue-600 mt-1">{stats.workerCount}</p>
             </div>
             <UserCheck className="h-8 w-8 text-blue-600" />
@@ -240,7 +240,7 @@ export default function UsersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Viewers</p>
+              <p className="text-sm text-gray-700">Viewers</p>
               <p className="text-3xl font-bold text-green-600 mt-1">{stats.viewerCount}</p>
             </div>
             <Eye className="h-8 w-8 text-green-600" />
@@ -253,11 +253,11 @@ export default function UsersPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-gray-700" />
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as typeof filter)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
               >
                 <option value="all">All Roles</option>
                 <option value="admin">Admin</option>
@@ -268,13 +268,13 @@ export default function UsersPage() {
           </div>
           
           <div className="relative">
-            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
             <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-gray-800"
             />
           </div>
         </div>
@@ -308,7 +308,7 @@ export default function UsersPage() {
                       <div className="text-sm font-medium text-gray-900">
                         {user.displayName || 'No Name'}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-700">
                         {user.email}
                       </div>
                     </div>
@@ -322,7 +322,7 @@ export default function UsersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-700">
                       {user.createdAt.toLocaleDateString()}
                     </div>
                   </td>
@@ -350,7 +350,7 @@ export default function UsersPage() {
           </table>
           
           {filteredUsers.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-700">
               No users found matching your criteria
             </div>
           )}

@@ -192,7 +192,7 @@ export default function WorkersPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Workers</h1>
-        <p className="text-gray-600 mt-2">Manage worker accounts and profiles</p>
+        <p className="text-gray-700 mt-2">Manage worker accounts and profiles</p>
       </div>
 
       {/* Error Message */}
@@ -207,7 +207,7 @@ export default function WorkersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Workers</p>
+              <p className="text-sm text-gray-700">Total Workers</p>
               <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
             </div>
             <UserCheck className="h-8 w-8 text-blue-600" />
@@ -217,7 +217,7 @@ export default function WorkersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">With Sensors</p>
+              <p className="text-sm text-gray-700">With Sensors</p>
               <p className="text-3xl font-bold text-purple-600 mt-1">{stats.assigned}</p>
             </div>
             <Wifi className="h-8 w-8 text-purple-600" />
@@ -227,7 +227,7 @@ export default function WorkersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Currently Active</p>
+              <p className="text-sm text-gray-700">Currently Active</p>
               <p className="text-3xl font-bold text-green-600 mt-1">{stats.active}</p>
             </div>
             <Activity className="h-8 w-8 text-green-600" />
@@ -237,7 +237,7 @@ export default function WorkersPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Available Sensors</p>
+              <p className="text-sm text-gray-700">Available Sensors</p>
               <p className="text-3xl font-bold text-orange-600 mt-1">{availableSensors.length}</p>
             </div>
             <Settings className="h-8 w-8 text-orange-600" />
@@ -250,13 +250,13 @@ export default function WorkersPage() {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Worker List</h3>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-600" />
             <input
               type="text"
               placeholder="Search workers..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-gray-800"
             />
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function WorkersPage() {
                           <div className="text-sm font-medium text-gray-900">
                             {worker.displayName || 'No Name Set'}
                           </div>
-                          <div className="text-sm text-gray-500 flex items-center">
+                          <div className="text-sm text-gray-700 flex items-center">
                             <Mail className="h-3 w-3 mr-1" />
                             {worker.email}
                           </div>
@@ -339,7 +339,7 @@ export default function WorkersPage() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">No sensor assigned</span>
+                        <span className="text-xs text-gray-700 italic">No sensor assigned</span>
                       )}
                     </td>
                     
@@ -367,7 +367,7 @@ export default function WorkersPage() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">
+                        <span className="text-xs text-gray-700 italic">
                           {assignment ? 'Sensor offline' : 'No data available'}
                         </span>
                       )}
@@ -375,7 +375,7 @@ export default function WorkersPage() {
                     
                     {/* Registered */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-700">
                         <Clock className="h-4 w-4 mr-1" />
                         <div>
                           <div>{worker.createdAt.toLocaleDateString()}</div>
@@ -588,29 +588,7 @@ export default function WorkersPage() {
         </div>
       )}
 
-      {/* Info Box */}
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <Activity className="h-5 w-5 text-green-600" />
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-green-800">Worker-Sensor Integration</h3>
-            <div className="mt-2 text-sm text-green-700">
-              <p>
-                Workers can now be paired with sensors for real-time monitoring. Once assigned and active, 
-                sensor data is automatically saved to Firestore every 10 seconds for detailed reporting and analysis.
-              </p>
-              <ul className="mt-2 list-disc list-inside space-y-1 text-xs">
-                <li>Assign sensors using the settings button</li>
-                <li>Monitor real-time posture and environmental data</li>
-                <li>Data automatically archived for reports</li>
-                <li>Safety alerts generated based on sensor thresholds</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

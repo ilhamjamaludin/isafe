@@ -108,7 +108,7 @@ export default function PosturePage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Posture Monitoring</h1>
-        <p className="text-gray-600 mt-2">Real-time worker posture analysis and alerts</p>
+        <p className="text-gray-700 mt-2">Real-time worker posture analysis and alerts</p>
       </div>
 
       {/* Statistics */}
@@ -116,7 +116,7 @@ export default function PosturePage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Workers</p>
+              <p className="text-sm text-gray-700">Total Workers</p>
               <p className="text-3xl font-bold text-gray-900 mt-1">{postureData.length}</p>
             </div>
             <Activity className="h-8 w-8 text-blue-600" />
@@ -126,7 +126,7 @@ export default function PosturePage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Good Posture</p>
+              <p className="text-sm text-gray-700">Good Posture</p>
               <p className="text-3xl font-bold text-green-600 mt-1">{stats.good}</p>
             </div>
             <CheckCircle className="h-8 w-8 text-green-600" />
@@ -136,7 +136,7 @@ export default function PosturePage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Warnings</p>
+              <p className="text-sm text-gray-700">Warnings</p>
               <p className="text-3xl font-bold text-yellow-600 mt-1">{stats.warning}</p>
             </div>
             <Clock className="h-8 w-8 text-yellow-600" />
@@ -146,7 +146,7 @@ export default function PosturePage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Critical</p>
+              <p className="text-sm text-gray-700">Critical</p>
               <p className="text-3xl font-bold text-red-600 mt-1">{stats.critical}</p>
             </div>
             <AlertTriangle className="h-8 w-8 text-red-600" />
@@ -159,11 +159,11 @@ export default function PosturePage() {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Worker Status</h3>
           <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-gray-500" />
+            <Filter className="h-4 w-4 text-gray-700" />
             <select 
               value={filter} 
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             >
               <option value="all">All Status</option>
               <option value="good">Good</option>
@@ -210,10 +210,10 @@ export default function PosturePage() {
                         <div className="text-sm font-medium text-gray-900">
                           {worker.workerName}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-700">
                           ID: {worker.workerId}
                         </div>
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-gray-700">
                           {worker.isOnline ? (
                             <span className="text-green-600">● Online</span>
                           ) : (
@@ -233,7 +233,7 @@ export default function PosturePage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{worker.angle}°</div>
                       {worker.rawData && (
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-700">
                           Roll: {worker.rawData.sensors.imu.roll_deg.toFixed(1)}°
                         </div>
                       )}
@@ -251,7 +251,7 @@ export default function PosturePage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">{worker.lastUpdate}</div>
+                      <div className="text-sm text-gray-700">{worker.lastUpdate}</div>
                     </td>
                   </tr>
                 );

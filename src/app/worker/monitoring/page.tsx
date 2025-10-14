@@ -25,7 +25,7 @@ export default function WorkerMonitoringPage() {
   const { user } = useAuth();
   const { assignment, loading: assignmentLoading } = useWorkerSensorData(user?.uid);
   const { devices } = useESP32Data();
-  const [isSessionActive, setIsSessionActive] = useState(false);
+  
 
   // Get sensor data for the assigned sensor
   const assignedSensor = assignment ? devices.find(d => d.deviceId === assignment.sensorId) : null;
@@ -139,7 +139,6 @@ export default function WorkerMonitoringPage() {
           <p className="text-gray-600 mt-2">Live sensor data from {assignment.sensorId}</p>
         </div>
         
-        {/* Session Control */}
         <div className="flex items-center space-x-4">
           <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${isOnline ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
             {isOnline ? <Wifi className="h-4 w-4" /> : <WifiOff className="h-4 w-4" />}
@@ -147,17 +146,6 @@ export default function WorkerMonitoringPage() {
               {isOnline ? 'Sensor Online' : 'Sensor Offline'}
             </span>
           </div>
-          
-          <button
-            onClick={() => setIsSessionActive(!isSessionActive)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              isSessionActive 
-                ? 'bg-red-600 text-white hover:bg-red-700' 
-                : 'bg-green-600 text-white hover:bg-green-700'
-            }`}
-          >
-            {isSessionActive ? 'End Session' : 'Start Session'}
-          </button>
         </div>
       </div>
 
